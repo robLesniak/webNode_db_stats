@@ -1,0 +1,15 @@
+---
+- name: "Install influx DB"
+  yum:
+    name: "{{influxDb_url}}"
+    state: present
+- service:
+    name: influxdb
+    state: restarted
+- name: "Install grafana"
+  yum:
+    name: "{{grafana_url}}"
+    state: present
+- service:
+    name: grafana-server
+    state: restarted

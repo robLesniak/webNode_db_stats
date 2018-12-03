@@ -1,0 +1,26 @@
+---
+    - include_tasks: os-depedencies.yml
+    - include_tasks: wp-install.yml
+
+    - name: "copy apache cfg"
+      template:
+        src: templates/blog.conf
+        dest: /etc/httpd/conf.d/blog.conf
+    - name: "Start service httpd, if not started"
+      service:
+        name: httpd
+        state: restarted
+    - name: "copy wp-cofnig.php"
+      copy:
+        src: templates/wp-config.php
+        dest: "{{wordpress_path}}"
+    - name: "Install telegraf"
+      yum:
+        name: "{{telegraf_url}}"
+        state: present
+    - template:
+        src: templates/telegraf.conf
+        dest: /etc/telegraf/telegraf.conf
+    - service:
+        name: telegraf
+        state: restarted

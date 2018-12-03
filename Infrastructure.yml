@@ -1,0 +1,26 @@
+---
+- hosts: web_nodes
+  become: yes
+  vars:
+   wordpress_path: /var/www/wordpress
+   name_of_project: wordpress
+   telegraf_url: https://dl.influxdata.com/telegraf/releases/telegraf-1.8.3-1.x86_64.rpm
+   metric_storage_ip: 172.31.23.112
+  tasks:
+    - include_tasks: tasks/install_wordpress.yml
+
+- hosts: db_node
+  become: yes
+  vars:
+    name_of_project: wordpress
+  tasks:
+    - include_tasks: tasks/install_db.yml
+
+- hosts: stats_node
+  become: yes
+  vars:
+    grafana_url: https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-5.3.4-1.x86_64.rpm
+    influxDb_url: https://dl.influxdata.com/influxdb/releases/influxdb-1.7.1.x86_64.rpm
+    metric_storage_ip: 172.31.23.112
+  tasks:
+    - include_tasks: tasks/stats.yml
